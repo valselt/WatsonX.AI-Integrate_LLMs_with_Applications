@@ -92,15 +92,15 @@ def answer_questions():
 
     # Web app UI - title and input box for the question
     st.title('🌠Watsonx.ai LLM')
-    user_question = st.text_input('Ask a question, for example: What is Indonesia?', key="input_text")
-    
-    # Layout for buttons
-    col1, col2 = st.columns([1, 1])  # Equal width columns for alignment
+    user_question = st.text_input('Ask a question, for example: What is Indonesia?', key="input_text", label_visibility="visible")
+
+    # Full-width buttons below the text input
+    col1, col2 = st.columns([0.5, 0.5])  # Split equally
 
     with col1:
-        send_button = st.button("Send", key="send_button")
+        send_button = st.button("Send", use_container_width=True)
     with col2:
-        clear_button = st.button("Clear Input", key="clear_button")
+        clear_button = st.button("Clear Input", use_container_width=True)
 
     # Logic for the buttons
     if clear_button:
@@ -136,6 +136,6 @@ def answer_questions():
             **Answer to your question:** {user_question} \
             *{model_output}*
         """, unsafe_allow_html=True)
-
+        
 # Invoke the main function
 answer_questions()
