@@ -92,31 +92,24 @@ def answer_questions():
 
     # Web app UI - title and input box for the question
     st.title('🌠Watsonx.ai LLM')
+    user_question = st.text_input('Ask a question, for example: What is Indonesia?', key="input_text")
     
-    # Session state to hold user input
-    if "user_question" not in st.session_state:
-        st.session_state["user_question"] = ""
+    # Layout for buttons
+    col1, col2 = st.columns([1, 1])  # Equal width columns for alignment
 
-    # Input field
-    user_question = st.text_input('Ask a question, for example: What is Infinite Learning Indonesia?', value=st.session_state["user_question"])
-
-    # Create centered layout for buttons
-    col1, col2, col3, col4, col5 = st.columns([2, 1, 1, 1, 2])  # Adjust proportions to center buttons
+    with col1:
+        send_button = st.button("Send", key="send_button")
     with col2:
-        send_button = st.button('Send')
-    with col3:
-        clear_button = st.button('Clear Input')
+        clear_button = st.button("Clear Input", key="clear_button")
 
-    # Handle "Clear Input" button click
+    # Logic for the buttons
     if clear_button:
-        st.session_state["user_question"] = ""
-        st.experimental_rerun()
+        st.session_state["input_text"] = ""  # Clear the input text
 
-    # Handle "Send" button click
     if send_button:
-        # If the question is blank, let's prevent LLM from showing a random fact, so we will ask a question
+        # Prevent empty questions
         if len(user_question.strip()) == 0:
-            user_question = "What is Infinite Learning Indonesia?"
+            user_question = "What is Indonesia?"
 
         # Get the prompt
         final_prompt = get_prompt(user_question)
@@ -124,8 +117,7 @@ def answer_questions():
         # Display our complete prompt - for debugging/understanding
         print(final_prompt)
 
-        # Look up parameters in documentation:
-        # https://ibm.github.io/watson-machine-learning-sdk/foundation_models.html#
+        # Model parameters
         model_type = ModelTypes.FLAN_UL2
         max_tokens = 100
         min_tokens = 20
@@ -138,15 +130,12 @@ def answer_questions():
         # Generate response
         generated_response = model.generate(prompt=final_prompt)
         model_output = generated_response['results'][0]['generated_text']
-        # For debugging
-        print("Answer: " + model_output)
 
         # Display output on the Web page
-        formatted_output = f"""
+        st.markdown(f"""
             **Answer to your question:** {user_question} \
-            *{model_output}*</i>
-            """
-        st.markdown(formatted_output, unsafe_allow_html=True)
+            *{model_output}*
+        """, unsafe_allow_html=True)
 
 # Invoke the main function
 answer_questions()
