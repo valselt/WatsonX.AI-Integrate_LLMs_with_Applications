@@ -66,6 +66,9 @@
             <li></li>
         </ul>
   </li>
+  <li>Create new .env file, and then add this : <pre><code>api_key=[your api key here]
+project_id=[your project id here]</code></pre>
+  To Check Your API <a href="https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui#create_user_key">click here</a></br>To Check Your Project ID. Go to <a href="https://dataplatform.cloud.ibm.com/projects/">this link</a>, and then click on your Project then click Manage -> General -> Project ID</li>
   <li>
     <strong>Run the API Demo Script:</strong> Execute the following command to run the WatsonX.ai API demo script:
     <pre><code>python ./demo_wml_api.py</code></pre>
