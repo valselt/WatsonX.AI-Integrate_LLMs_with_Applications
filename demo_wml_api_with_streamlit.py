@@ -91,42 +91,62 @@ def answer_questions():
     get_credentials()
 
     # Web app UI - title and input box for the question
-    st.title('🌠Test watsonx.ai LLM')
-    user_question = st.text_input('Ask a question, for example: What is IBM?')
+    st.title('🌠Watsonx.ai LLM')
+    
+    # Session state to hold user input
+    if "user_question" not in st.session_state:
+        st.session_state["user_question"] = ""
 
-    # If the quesiton is blank, let's prevent LLM from showing a random fact, so we will ask a question
-    if len(user_question.strip())==0:
-        user_question="What is IBM?"
+    # Input field
+    user_question = st.text_input('Ask a question, for example: What is Infinite Learning Indonesia?', value=st.session_state["user_question"])
 
-    # Get the prompt
-    final_prompt = get_prompt(user_question)
+    # Create centered layout for buttons
+    col1, col2, col3, col4, col5 = st.columns([2, 1, 1, 1, 2])  # Adjust proportions to center buttons
+    with col2:
+        send_button = st.button('Send')
+    with col3:
+        clear_button = st.button('Clear Input')
 
-    # Display our complete prompt - for debugging/understanding
-    print(final_prompt)
+    # Handle "Clear Input" button click
+    if clear_button:
+        st.session_state["user_question"] = ""
+        st.experimental_rerun()
 
-    # Look up parameters in documentation:
-    # https://ibm.github.io/watson-machine-learning-sdk/foundation_models.html#
-    model_type = ModelTypes.FLAN_UL2
-    max_tokens = 100
-    min_tokens = 20
-    decoding = DecodingMethods.GREEDY
-    stop_sequences = ['.']
+    # Handle "Send" button click
+    if send_button:
+        # If the question is blank, let's prevent LLM from showing a random fact, so we will ask a question
+        if len(user_question.strip()) == 0:
+            user_question = "What is Infinite Learning Indonesia?"
 
-    # Get the model
-    model = get_model(model_type, max_tokens, min_tokens, decoding,stop_sequences)
+        # Get the prompt
+        final_prompt = get_prompt(user_question)
 
-    # Generate response
-    generated_response = model.generate(prompt=final_prompt)
-    model_output = generated_response['results'][0]['generated_text']
-    # For debugging
-    print("Answer: " + model_output)
+        # Display our complete prompt - for debugging/understanding
+        print(final_prompt)
 
-    # Display output on the Web page
-    formatted_output = f"""
-        **Answer to your question:** {user_question} \
-        *{model_output}*</i>
-        """
-    st.markdown(formatted_output, unsafe_allow_html=True)
+        # Look up parameters in documentation:
+        # https://ibm.github.io/watson-machine-learning-sdk/foundation_models.html#
+        model_type = ModelTypes.FLAN_UL2
+        max_tokens = 100
+        min_tokens = 20
+        decoding = DecodingMethods.GREEDY
+        stop_sequences = ['.']
+
+        # Get the model
+        model = get_model(model_type, max_tokens, min_tokens, decoding, stop_sequences)
+
+        # Generate response
+        generated_response = model.generate(prompt=final_prompt)
+        model_output = generated_response['results'][0]['generated_text']
+        # For debugging
+        print("Answer: " + model_output)
+
+        # Display output on the Web page
+        formatted_output = f"""
+            **Answer to your question:** {user_question} \
+            *{model_output}*</i>
+            """
+        st.markdown(formatted_output, unsafe_allow_html=True)
 
 # Invoke the main function
 answer_questions()
