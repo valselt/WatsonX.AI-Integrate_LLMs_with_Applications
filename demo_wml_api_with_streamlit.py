@@ -136,6 +136,9 @@ def answer_questions():
             **Answer to your question:** {user_question} \
             *{model_output}*
         """, unsafe_allow_html=True)
+
+        # Display the model type
+        st.markdown(f"**Model Used:** {model_type.value if hasattr(model_type, 'value') else model_type}")
         
 # Invoke the main function
 answer_questions()
