@@ -49,8 +49,7 @@ def get_credentials():
     globals()["watsonx_project_id"] = os.getenv("project_id", None)
 
 # The get_model function creates an LLM model object with the specified parameters
-def get_model(model_type,max_tokens,min_tokens,decoding,temperature):
-
+def get_model(model_type, max_tokens, min_tokens, decoding, temperature):
     generate_params = {
         GenParams.MAX_NEW_TOKENS: max_tokens,
         GenParams.MIN_NEW_TOKENS: min_tokens,
@@ -66,9 +65,14 @@ def get_model(model_type,max_tokens,min_tokens,decoding,temperature):
             "url": url
         },
         project_id=watsonx_project_id
-        )
+    )
+    
+    # Cetak nama model
+    print(f"Model being used: {model_type.value if hasattr(model_type, 'value') else model_type}")
 
+    
     return model
+
 
 def get_list_of_complaints():
 
